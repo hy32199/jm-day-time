@@ -121,7 +121,54 @@ const todayISO=()=>{let d=new Date();return `${d.getFullYear()}-${String(d.getMo
 $('taskDate').value=todayISO();
 function save(){localStorage.setItem('jm_tasks',JSON.stringify(tasks));renderAll()}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function renderTasks(target,filter){let list=tasks.filter(filter).sort((a,b)=>(a.time||'99:99').localeCompare(b.time||'99:99'));let el=$(target);if(!list.length){el.innerHTML=`<div class="empty">${tr('empty')}</div>`;return}el.innerHTML=list.map(t=>`<div class="task ${t.done?'done':''}"><input type="checkbox" data-check="${t.id}" ${t.done?'checked':''} aria-label="${tr('completed')}"><div class="taskmain"><div class="tasktitle">${esc(t.title)}</div><div class="taskmeta">${t.time?`${tr('at')} ${esc(t.time)} · `:''}${esc(t.date)} <span class="pill">${t.priority==='high'?tr('highTag'):tr('normalTag')}</span>${t.repeat&&t.repeat!=='none'?`<span class="pill">${tr(t.repeat)}</span>`:''}${t.notes?`<div>${esc(t.notes)}</div>`:''}</div></div><button class="danger" data-delete="${t.id}">${tr('delete')}</button></div>`).join('')}
+function renderTasks(target, filter) {
+  let list = tasks.filter(filter).sort((a, b) =>
+    (a.time || '99:99').localeCompare(b.time || '99:99')
+  );
+  let el = $(target);
+
+  if (!list.length) {
+    el.innerHTML = `<div class="empty">${tr('empty')}</div>`;
+    return;
+  }
+
+  const styles = {
+    study:    { icon: '📚', color: '#dbeafe' },
+    work:     { icon: '💼', color: '#ede9fe' },
+    exercise: { icon: '🏋️', color: '#dcfce7' },
+    forex:    { icon: '📈', color: '#fef3c7' },
+    travel:   { icon: '🧳', color: '#ffedd5' },
+    personal: { icon: '🌿', color: '#fce7f3' },
+    other:    { icon: '✨', color: '#e5e7eb' }
+  };
+
+  el.innerHTML = list.map(t => {
+    const style = styles[t.type] || styles.other;
+    const icon = t.icon && t.icon !== 'auto'
+      ? t.icon : style.icon;
+    const color = t.color && t.color !== 'auto'
+      ? t.color : style.color;
+
+    return `<div class="task ${t.done ? 'done' : ''}"
+      style="background:${esc(color)}">
+      <input type="checkbox" data-check="${t.id}"
+        ${t.done ? 'checked' : ''}
+        aria-label="${tr('completed')}">
+      <div class="taskmain">
+        <div class="tasktitle">${icon} ${esc(t.title)}</div>
+        <div class="taskmeta">
+          ${t.time ? `${tr('at')} ${esc(t.time)} · ` : ''}
+          ${esc(t.date)}
+          <span class="pill">${t.priority === 'high' ? tr('highTag') : tr('normalTag')}</span>
+          ${t.repeat && t.repeat !== 'none' ? `<span class="pill">${tr(t.repeat)}</span>` : ''}
+          ${t.notes ? `<div>${esc(t.notes)}</div>` : ''}
+        </div>
+      </div>
+      <button class="danger" data-delete="${t.id}">${tr('delete')}</button>
+    </div>`;
+  }).join('');
+}
+
 function renderAll(){renderTasks('taskList',t=>t.date===todayISO());renderTasks('scheduleList',t=>!!t.time&&!t.done);renderCalendar()}
 function renderCalendar(){let y=monthCursor.getFullYear(),m=monthCursor.getMonth();$('monthLabel').textContent=`${tr('months')[m]} ${y}`;let first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate();let html=tr('weekdays').map(d=>`<div class="dayname">${d}</div>`).join('');for(let i=0;i<first;i++)html+='<div></div>';for(let d=1;d<=days;d++){let iso=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,has=tasks.some(t=>t.date===iso),today=iso===todayISO();html+=`<div class="day ${has?'has':''} ${today?'today':''}" title="${has?'Tasks':''}">${d}${has?' •':''}</div>`}$('calendarGrid').innerHTML=html}
 function updateClock(){let d=new Date();$('clock').textContent=[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');$('date').textContent=`${tr('weekdays')[d.getDay()]} · ${d.getDate()} ${tr('months')[d.getMonth()]} ${d.getFullYear()}`;checkReminders()}
