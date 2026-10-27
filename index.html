@@ -35,6 +35,46 @@ nav{display:flex;gap:8px;overflow:auto;padding:16px 0 12px}nav button{white-spac
  <div class="card"><h2 data-i="addTask">လုပ်စရာအသစ်ထည့်ရန်</h2>
   <form id="taskForm" class="grid">
    <label class="field full"><span data-i="taskName">လုပ်စရာ</span><input id="taskName" required maxlength="140" placeholder="ဥပမာ - စာလေ့လာရန်"></label>
+<label class="field">
+  <span>လုပ်စရာအမျိုးအစား</span>
+  <select id="taskType">
+    <option value="study">📚 စာလေ့လာချိန်</option>
+    <option value="work">💼 အလုပ်</option>
+    <option value="exercise">🏋️ လေ့ကျင့်ခန်း</option>
+    <option value="forex">📈 Forex လေ့လာချိန်</option>
+    <option value="travel">🧳 ခရီးသွား</option>
+    <option value="personal">🌿 ကိုယ်ပိုင်အချိန်</option>
+    <option value="other">✨ အခြား</option>
+  </select>
+</label>
+
+<label class="field">
+  <span>ပုံရွေးရန်</span>
+  <select id="taskIcon">
+    <option value="auto">အမျိုးအစားအလိုက် အလိုအလျောက်</option>
+    <option value="📚">📚 စာအုပ်</option>
+    <option value="💼">💼 အလုပ်</option>
+    <option value="🏋️">🏋️ အားကစား</option>
+    <option value="📈">📈 Forex</option>
+    <option value="🧳">🧳 ခရီး</option>
+    <option value="🌿">🌿 ကိုယ်ပိုင်</option>
+    <option value="✨">✨ အခြား</option>
+  </select>
+</label>
+
+<label class="field">
+  <span>အရောင်ရွေးရန်</span>
+  <select id="taskColor">
+    <option value="auto">အမျိုးအစားအလိုက် အလိုအလျောက်</option>
+    <option value="#dbeafe">အပြာ</option>
+    <option value="#dcfce7">အစိမ်း</option>
+    <option value="#fce7f3">ပန်းရောင်</option>
+    <option value="#fef3c7">အဝါ</option>
+    <option value="#ede9fe">ခရမ်း</option>
+    <option value="#ffedd5">လိမ္မော်</option>
+  </select>
+</label>
+
    <label class="field"><span data-i="date">ရက်စွဲ</span><input id="taskDate" type="date" required></label>
    <label class="field"><span data-i="time">အချိန်</span><input id="taskTime" type="time"></label>
    <label class="field"><span data-i="priority">ဦးစားပေး</span><select id="priority"><option value="normal" data-i="normal">ပုံမှန်</option><option value="high" data-i="high">အရေးကြီး</option></select></label>
